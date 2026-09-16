@@ -1,0 +1,4 @@
+<decoder name="solar_grid">
+  <program_name>solar_grid</program_name>
+  <plugin_decoder>JSON_Decoder</plugin_decoder>
+</decoder>

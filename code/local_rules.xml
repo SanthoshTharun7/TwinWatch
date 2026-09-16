@@ -1,0 +1,70 @@
+<!-- Local rules for MATLAB Solar Grid Cyber-Resilience Simulation -->
+<group name="solar_grid,cps_security,ot_security,">
+
+  <!-- Base Solar Grid rule -->
+  <rule id="100100" level="3">
+    <decoded_as>solar_grid</decoded_as>
+    <description>Solar Grid Simulation: Security or telemetry event received.</description>
+    <group>solar_grid,</group>
+  </rule>
+
+  <!-- Telemetry Normal -->
+  <rule id="100101" level="3">
+    <if_sid>100100</if_sid>
+    <field name="event_type">^TELEMETRY_NORMAL$</field>
+    <description>Solar Grid: Normal operating telemetry recorded (Vdc: $(sensor_voltage)V, Power: $(power_kw)kW).</description>
+    <group>solar_grid,telemetry,</group>
+  </rule>
+
+  <!-- Anomaly Detected by Luenberger Observer -->
+  <rule id="100102" level="8">
+    <if_sid>100100</if_sid>
+    <field name="event_type">^ANOMALY_RESIDUAL_ALERT$</field>
+    <description>Solar Grid ALERT: Observer residual anomaly detected! Residual $(residual)V exceeded 3-sigma threshold $(threshold)V.</description>
+    <group>solar_grid,anomaly_detection,attack_alert,</group>
+  </rule>
+
+  <!-- Attack Injected: False Data Injection (FDIA) -->
+  <rule id="100103" level="10">
+    <if_sid>100100</if_sid>
+    <field name="event_type">^CYBER_ATTACK_INJECTED$</field>
+    <field name="attack_type">FDIA</field>
+    <description>Solar Grid CRITICAL: False Data Injection Attack (FDIA) injected into DC-Link voltage sensor ($(attack_type)).</description>
+    <group>solar_grid,fdia,integrity_attack,</group>
+  </rule>
+
+  <!-- Attack Injected: Replay Attack -->
+  <rule id="100104" level="10">
+    <if_sid>100100</if_sid>
+    <field name="event_type">^CYBER_ATTACK_INJECTED$</field>
+    <field name="attack_type">Replay</field>
+    <description>Solar Grid CRITICAL: Replay Attack injected on voltage telemetry ($(attack_type)).</description>
+    <group>solar_grid,replay_attack,integrity_attack,</group>
+  </rule>
+
+  <!-- Attack Injected: Denial of Service / Freeze -->
+  <rule id="100105" level="12">
+    <if_sid>100100</if_sid>
+    <field name="event_type">^CYBER_ATTACK_INJECTED$</field>
+    <field name="attack_type">Denial of Service|Freeze</field>
+    <description>Solar Grid EMERGENCY: Denial of Service / Telemetry Freeze attack on PV Grid Controller.</description>
+    <group>solar_grid,dos_attack,availability_attack,</group>
+  </rule>
+
+  <!-- Autonomous Mitigation Activated -->
+  <rule id="100106" level="7">
+    <if_sid>100100</if_sid>
+    <field name="event_type">^CYBER_RESILIENCE_MITIGATED$</field>
+    <description>Solar Grid RESILIENCE: Corrupted sensor isolated; control switched to virtual Luenberger observer estimate.</description>
+    <group>solar_grid,mitigation,resilience,</group>
+  </rule>
+
+  <!-- Simulation Benchmark Summary -->
+  <rule id="100107" level="4">
+    <if_sid>100100</if_sid>
+    <field name="event_type">^SIMULATION_SUMMARY$</field>
+    <description>Solar Grid Summary: Peak dev $(peak_dev)V ($(peak_dev_pct)%), Detection delay $(detect_delay), Recovery $(recovery_time).</description>
+    <group>solar_grid,benchmark,</group>
+  </rule>
+
+</group>
