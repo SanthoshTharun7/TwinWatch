@@ -123,7 +123,7 @@ Attacks implemented here are grounded in [MITRE ATT&CK for ICS](https://attack.m
 
 ## Author
 
-Built by [Santy](https://github.com/SanthoshTharun7) — final-year B.Tech Cybersecurity, Amrita University, Coimbatore.
+Built by [SanthoshTharun7](https://github.com/SanthoshTharun7) — final-year B.Tech Cybersecurity, Amrita University, Coimbatore.
 
 ## License
 
